@@ -1,0 +1,263 @@
+
+
+Commands start HBase and HBase Shell:-
+=================================
+start-all.sh
+start-hbase.sh
+hbase shell
+
+
+
+To show the tables:-
+---------------------
+list
+
+
+Create a table niit with 3 families - personal, sem1 and sem2 :-
+-----------------------------------------------------------------
+create 'niit' , 'personal', 'sem1', 'sem2'
+
+
+Schema of a Table:-
+--------------------
+describe 'niit'
+
+
+Add a cell data inside a table:-
+--------------------------------
+put 'niit', '101','personal:name' , 'Shreyas'
+put 'niit', '101', 'personal:add' , 'xyz'
+put 'niit', '101', 'sem1:A', '70'
+put 'niit', '101', 'sem1:B','75'
+
+
+
+View Data inside the table:-
+---------------------------
+scan 'niit'
+
+--Output--
+ROW                   COLUMN+CELL                                               
+ 101                  column=personal:add, timestamp=1514382256829, value=xyz   
+ 101                  column=personal:name, timestamp=1514371437457, value=Shrey
+                      as                                                        
+ 101                  column=sem1:A, timestamp=1514382354693, value=70          
+ 101                  column=sem1:B, timestamp=1514382394456, value=75          
+ 102                  column=personal:add, timestamp=1514520168124, value=Kolhap
+                      ur                                                        
+ 102                  column=personal:name, timestamp=1514382491808, value=Prati
+                      k                                                         
+ 102                  column=sem1:A, timestamp=1514520220294, value=75          
+ 102                  column=sem1:B, timestamp=1514520231198, value=70          
+
+
+
+Add new schema in the table:-
+---------------------------
+alter 'niit', NAME => 'sem3'
+
+
+
+To check old values from the cell:-
+---------------------------------
+alter 'niit', {NAME => 'personal', VERSIONS => 3}
+
+
+
+ Update data in a table:-
+--------------------------------
+put 'niit','101','personal:add','Mumbai'
+
+
+--Output--
+hbase(main):011:0> scan 'niit'
+ROW                   COLUMN+CELL                                               
+ 101                  column=personal:add, timestamp=1514520817945, value=Mumbai
+ 101                  column=personal:name, timestamp=1514371437457, value=Shrey
+                      as                                                        
+ 101                  column=sem1:A, timestamp=1514382354693, value=70          
+ 101                  column=sem1:B, timestamp=1514382394456, value=75          
+ 102                  column=personal:add, timestamp=1514520168124, value=Kolhap
+                      ur                                                        
+ 102                  column=personal:name, timestamp=1514382491808, value=Prati
+                      k                                                         
+ 102                  column=sem1:A, timestamp=1514520220294, value=75          
+ 102                  column=sem1:B, timestamp=1514520231198, value=70          
+
+
+
+
+Get particular record from table:-
+-----------------------------------
+get 'niit','101'
+
+
+
+Update data in a table:-
+--------------------------------
+put 'niit','101','personal:add','Goa'
+
+
+--Output--
+hbase(main):016:0> scan 'niit'
+ROW                   COLUMN+CELL                                               
+ 101                  column=personal:add, timestamp=1514521019320, value=Goa   
+ 101                  column=personal:name, timestamp=1514371437457, value=Shrey
+                      as                                                        
+ 101                  column=sem1:A, timestamp=1514382354693, value=70          
+ 101                  column=sem1:B, timestamp=1514382394456, value=75          
+ 102                  column=personal:add, timestamp=1514520168124, value=Kolhap
+                      ur                                                        
+ 102                  column=personal:name, timestamp=1514382491808, value=Prati
+                      k                                                         
+ 102                  column=sem1:A, timestamp=1514520220294, value=75          
+ 102                  column=sem1:B, timestamp=1514520231198, value=70         
+
+
+
+Fetching multiple values in one cell:-
+---------------------------------------
+get 'niit', '101', {COLUMN => 'personal:add', VERSIONS => 3}
+
+--Output--
+
+COLUMN                CELL                                                      
+ personal:add         timestamp=1514521019320, value=Goa                        
+ personal:add         timestamp=1514520817945, value=Mumbai                     
+ personal:add         timestamp=1514382256829, value=xyz   
+
+
+
+To Add Records:-
+-----------------
+put 'niit', '103','personal:name' , 'Jaya'
+put 'niit', '103', 'personal:add' , 'Pune'
+put 'niit', '103', 'sem1:A', '80'
+put 'niit', '103', 'sem1:B','75'
+
+
+
+To view data:-
+---------------
+scan 'niit'
+
+--Output--
+ROW                   COLUMN+CELL                                               
+ 101                  column=personal:add, timestamp=1514521019320, value=Goa   
+ 101                  column=personal:name, timestamp=1514371437457, value=Shrey
+                      as                                                        
+ 101                  column=sem1:A, timestamp=1514382354693, value=70          
+ 101                  column=sem1:B, timestamp=1514382394456, value=75          
+ 102                  column=personal:add, timestamp=1514520168124, value=Kolhap
+                      ur                                                        
+ 102                  column=personal:name, timestamp=1514382491808, value=Prati
+                      k                                                         
+ 102                  column=sem1:A, timestamp=1514520220294, value=75          
+ 102                  column=sem1:B, timestamp=1514520231198, value=70          
+ 103                  column=personal:add, timestamp=1514521368319, value=Pune  
+ 103                  column=personal:name, timestamp=1514521355797, value=Jaya 
+ 103                  column=sem1:A, timestamp=1514521384107, value=80          
+ 103                  column=sem1:B, timestamp=1514521398131, value=75          
+
+
+
+Delete particular record from table:-
+-------------------------------------
+delete 'niit','103', 'sem1:A'
+
+
+--Output--
+hbase(main):024:0> scan 'niit'
+ROW                   COLUMN+CELL                                               
+ 101                  column=personal:add, timestamp=1514521019320, value=Goa   
+ 101                  column=personal:name, timestamp=1514371437457, value=Shrey
+                      as                                                        
+ 101                  column=sem1:A, timestamp=1514382354693, value=70          
+ 101                  column=sem1:B, timestamp=1514382394456, value=75          
+ 102                  column=personal:add, timestamp=1514520168124, value=Kolhap
+                      ur                                                        
+ 102                  column=personal:name, timestamp=1514382491808, value=Prati
+                      k                                                         
+ 102                  column=sem1:A, timestamp=1514520220294, value=75          
+ 102                  column=sem1:B, timestamp=1514520231198, value=70          
+ 103                  column=personal:add, timestamp=1514521368319, value=Pune  
+ 103                  column=personal:name, timestamp=1514521355797, value=Jaya 
+ 103                  column=sem1:B, timestamp=1514521398131, value=75     
+
+
+
+Delete All the Record:-
+------------------------
+deleteall 'niit','103'
+
+--Output--
+ROW                   COLUMN+CELL                                               
+ 101                  column=personal:add, timestamp=1514521019320, value=Goa   
+ 101                  column=personal:name, timestamp=1514371437457, value=Shrey
+                      as                                                        
+ 101                  column=sem1:A, timestamp=1514382354693, value=70          
+ 101                  column=sem1:B, timestamp=1514382394456, value=75          
+ 102                  column=personal:add, timestamp=1514520168124, value=Kolhap
+                      ur                                                        
+ 102                  column=personal:name, timestamp=1514382491808, value=Prati
+                      k                                                         
+ 102                  column=sem1:A, timestamp=1514520220294, value=75          
+ 102                  column=sem1:B, timestamp=1514520231198, value=70          
+
+
+
+
+====================================================================================================================================================
+
+
+
+Create a table 'retail' with 1 family - 'csutomer' in HBase:-
+------------------------------------------------------------
+create 'retail','customer'
+
+
+Schema of a table:-
+--------------------
+describe 'retail'
+
+
+Count number of records:-
+--------------------------
+count 'retail'
+
+
+Import data from SQL to HBase using Sqoop:-
+-------------------------------------------
+sqoop import --connect jdbc:mysql://localhost/college --username root --password root --table customer --columns "customer_id,firstname,lastname,age,profession" --hbase-table retail --column-family customer --hbase-row-key customer_id  -m 1;
+
+
+See the Data from table:-
+--------------------------
+scan 'retail'
+
+
+Filter all the columns with a value "Pilot" :-
+-----------------------------------------------
+scan 'retail' , FILTER => "ValueFilter(=, 'binary:Pilot')"
+
+scan 'retail', FILTER => "ValueFilter(=, 'binary:45')"
+
+
+
+Filter single column with a value "Pilot" :-
+----------------------------------------------
+scan 'retail', { COLUMNS => 'customer:profession' , FILTER => "ValueFilter(=, 'substring:Pilot')"}
+
+scan 'retail', { COLUMNS => 'customer:lastname' , FILTER => "ValueFilter(=, 'substring:Smith')"}	
+
+
+
+
+=======================================================================================================================================================
+
+
+
+
+
+
+
